@@ -57,13 +57,14 @@ function pad2(n) {
   return String(n).padStart(2, "0");
 }
 
-// ---------- DIGITAL TIME ----------
+// ---------- DIGITAL TIME + BLINKING COLON ----------
 function updateDigitalTime() {
   const now = new Date();
   const p = partsInTZ(now, TIME_ZONE);
 
   let hour = p.hour;
   const minute = p.minute;
+  const second = p.second;
 
   if (!USE_24H) {
     const h = hour % 12;
@@ -71,10 +72,16 @@ function updateDigitalTime() {
   }
 
   const hourText = USE_24H ? pad2(hour) : String(hour);
-  const txt = `${hourText}:${pad2(minute)}`;
 
-  const el = document.getElementById("timeText");
-  if (el) el.textContent = txt;
+  const hourEl = document.getElementById("hourText");
+  const minEl = document.getElementById("minuteText");
+  const colonEl = document.getElementById("colonText");
+
+  if (hourEl) hourEl.textContent = hourText;
+  if (minEl) minEl.textContent = pad2(minute);
+
+  // Blink: visible on even seconds, hidden on odd seconds
+  if (colonEl) colonEl.style.opacity = (second % 2 === 0) ? "1" : "0";
 }
 
 updateDigitalTime();
