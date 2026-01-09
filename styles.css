@@ -23,13 +23,13 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap: clamp(28px, 4vw, 70px);     /* increased spacing */
+  gap: clamp(34px, 5vw, 84px);       /* more separation */
   padding: clamp(14px, 2.5vw, 36px);
 }
 
 /* Give the clock more room */
 .left{
-  flex: 1.5;                        /* was 1.35 */
+  flex: 1.7;                          /* more left area */
   display:flex;
   align-items:center;
   justify-content:center;
@@ -37,36 +37,36 @@ body{
 }
 
 .right{
-  flex: 0.8;                        /* slightly smaller calendar area */
+  flex: 0.75;                         /* slightly smaller calendar area */
   display:flex;
   flex-direction:column;
   justify-content:center;
   min-width:0;
-  max-width: 540px;                 /* was 560px */
+  max-width: 520px;                   /* narrower right to prevent overlap */
 }
 
-/* Bigger digital clock + shifted left */
+/* Bigger digital clock + shifted further left */
 .digitalSvg{
-  width: min(88vh, 70vw);
+  width: min(86vh, 64vw);             /* slightly narrower to avoid cropping */
   max-width: 1100px;
   height: auto;
   display:block;
-  transform: translateX(-2.5vw);    /* move clock left */
+  transform: translateX(-4.2vw);      /* move clock further left */
 }
 
-/* Big time text (no ring) */
+/* Digital time */
 .timeText{
   fill: rgba(235, 240, 255, 0.97);
-  font-weight: 720;                 /* 10% thinner than 800 */
-  font-size: 108px;
+  font-weight: 648;                   /* 10% thinner than 720 */
+  font-size: 112px;                   /* slightly bigger */
   text-anchor: middle;
   dominant-baseline: middle;
   letter-spacing: 1px;
 }
 
-/* Fallback for browsers that ignore 720 */
+/* If a browser ignores non-standard weights, fall back gracefully */
 @supports not (font-variation-settings: normal) {
-  .timeText{ font-weight: 700; }
+  .timeText{ font-weight: 600; }
 }
 
 /* Calendar */
@@ -123,7 +123,7 @@ body{
   .screen{ flex-direction:column; gap: 18px; }
   .digitalSvg{
     width: min(55vh, 92vw);
-    transform: none;               /* do not shift left in portrait */
+    transform: none;
   }
   .right{ width: min(92vw, 560px); max-width: 560px; }
 }
