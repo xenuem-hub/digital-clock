@@ -10,6 +10,7 @@
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
+
 body{
   margin:0;
   background:var(--bg);
@@ -23,50 +24,50 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap: clamp(34px, 5vw, 84px);       /* more separation */
+  gap: clamp(28px, 4vw, 70px);
   padding: clamp(14px, 2.5vw, 36px);
 }
 
-/* Give the clock more room */
+/* LEFT: make sure clock never intrudes into calendar */
 .left{
-  flex: 1.7;                          /* more left area */
+  flex: 1.25;
+  min-width: 0;
   display:flex;
   align-items:center;
-  justify-content:center;
-  min-width:0;
+  justify-content:flex-start;
+  padding-left: clamp(8px, 2vw, 28px);   /* nudges clock left */
+  overflow: hidden;                      /* prevents overlap bleed */
 }
 
+/* A fixed “safe” box for the time; JS will fit font to this box */
+.timeBox{
+  width: 100%;
+  max-width: 60vw;                       /* hard cap to protect calendar */
+  height: min(70vh, 420px);              /* keeps vertical proportions stable */
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+}
+
+/* The time itself (10% thinner than before) */
+.timeText{
+  display:inline-block;
+  color: rgba(235, 240, 255, 0.97);
+  font-weight: 600;                      /* thinner and well-supported */
+  letter-spacing: 1px;
+  line-height: 1;
+  white-space: nowrap;
+  font-size: 320px;                      /* starting point; JS will auto-fit */
+}
+
+/* RIGHT: calendar area */
 .right{
-  flex: 0.75;                         /* slightly smaller calendar area */
+  flex: 0.9;
+  min-width: 0;
+  max-width: 560px;
   display:flex;
   flex-direction:column;
   justify-content:center;
-  min-width:0;
-  max-width: 520px;                   /* narrower right to prevent overlap */
-}
-
-/* Bigger digital clock + shifted further left */
-.digitalSvg{
-  width: min(86vh, 64vw);             /* slightly narrower to avoid cropping */
-  max-width: 1100px;
-  height: auto;
-  display:block;
-  transform: translateX(-4.2vw);      /* move clock further left */
-}
-
-/* Digital time */
-.timeText{
-  fill: rgba(235, 240, 255, 0.97);
-  font-weight: 648;                   /* 10% thinner than 720 */
-  font-size: 112px;                   /* slightly bigger */
-  text-anchor: middle;
-  dominant-baseline: middle;
-  letter-spacing: 1px;
-}
-
-/* If a browser ignores non-standard weights, fall back gracefully */
-@supports not (font-variation-settings: normal) {
-  .timeText{ font-weight: 600; }
 }
 
 /* Calendar */
@@ -120,10 +121,20 @@ body{
 
 /* Portrait fallback */
 @media (orientation: portrait){
-  .screen{ flex-direction:column; gap: 18px; }
-  .digitalSvg{
-    width: min(55vh, 92vw);
-    transform: none;
+  .screen{
+    flex-direction:column;
+    gap: 18px;
   }
-  .right{ width: min(92vw, 560px); max-width: 560px; }
+  .left{
+    justify-content:center;
+    padding-left: 0;
+  }
+  .timeBox{
+    max-width: 92vw;
+    height: min(36vh, 260px);
+    justify-content:center;
+  }
+  .right{
+    width: min(92vw, 560px);
+  }
 }
