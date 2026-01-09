@@ -1,0 +1,140 @@
+:root{
+  --bg:#000;
+  --white: rgba(255,255,255,0.95);
+  --gray: rgba(255,255,255,0.55);
+  --dim: rgba(255,255,255,0.28);
+
+  --red: #ff3b30;      /* month title */
+  --orange: #ff9f0a;   /* today highlight */
+
+  /* StandBy-ish cool tick color for digital ring */
+  --ringTick: rgba(150, 185, 235, 0.75);
+  --ringTickStrong: rgba(175, 205, 245, 0.90);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+
+.screen{
+  height:100%;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap: clamp(18px, 3vw, 48px);
+  padding: clamp(14px, 2.5vw, 36px);
+}
+
+.left{
+  flex: 1.2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+}
+
+.right{
+  flex: 0.9;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
+  max-width: 560px;
+}
+
+/* Digital clock SVG */
+.digitalSvg{
+  width: min(72vh, 58vw);
+  max-width: 980px;
+  height: auto;
+  display:block;
+}
+
+/* Hide the ring outline; we only show ticks */
+.ringPath{
+  fill: none;
+  stroke: none;
+}
+
+/* Tick strokes */
+.rTick{
+  stroke: var(--ringTick);
+  stroke-linecap: round;
+  stroke-width: 3.4;
+}
+.rTick.major{
+  stroke: var(--ringTickStrong);
+  stroke-width: 4.6;
+}
+
+/* Big time text */
+.timeText{
+  fill: rgba(235, 240, 255, 0.95);
+  font-weight: 700;
+  font-size: 78px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  letter-spacing: 1px;
+}
+
+/* Calendar */
+.monthTitle{
+  color: var(--red);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: clamp(22px, 3vmin, 34px);
+  margin-bottom: clamp(10px, 1.6vmin, 16px);
+}
+
+.dowRow{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: clamp(10px, 1.7vmin, 18px);
+  color: var(--dim);
+  font-weight: 600;
+  letter-spacing: 6px;
+  font-size: clamp(16px, 2.2vmin, 22px);
+  margin-bottom: clamp(12px, 2vmin, 18px);
+}
+
+.calGrid{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: clamp(12px, 2.1vmin, 22px);
+}
+
+.dayCell{
+  height: clamp(34px, 5.2vmin, 56px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: var(--gray);
+  font-weight: 600;
+  font-size: clamp(22px, 3.2vmin, 34px);
+  border-radius: 999px;
+  user-select:none;
+}
+
+.dayCell.blank{
+  opacity: 0;          /* no zeros; true blanks */
+  pointer-events:none;
+}
+
+.dayCell.today{
+  background: var(--orange);
+  color: var(--white);
+}
+
+/* Portrait fallback */
+@media (orientation: portrait){
+  .screen{ flex-direction:column; gap: 18px; }
+  .digitalSvg{ width: min(48vh, 92vw); }
+  .right{ width: min(92vw, 560px); }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Clock + Calendar",
+  "short_name": "Clock",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "landscape",
+  "icons": []
+}
