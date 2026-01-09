@@ -1,7 +1,7 @@
 // Force US Eastern time
 const TIME_ZONE = "America/New_York";
 
-// true for 24-hour (13:29). false for 12-hour (1:29).
+// true for 24-hour (14:40). false for 12-hour (2:40).
 const USE_24H = true;
 
 const WEEKDAY_INDEX = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
@@ -37,7 +37,6 @@ function partsInTZ(date, timeZone) {
   };
 }
 
-// Find a Date instant whose formatted TZ date equals Y-M-D (weekday alignment)
 function findInstantForTZDate(year, month1to12, day, timeZone) {
   let dt = new Date(Date.UTC(year, month1to12 - 1, day, 12, 0, 0));
   const targetKey = year * 10000 + month1to12 * 100 + day;
@@ -57,7 +56,36 @@ function pad2(n) {
   return String(n).padStart(2, "0");
 }
 
-// ---------- DIGITAL TIME + BLINKING COLON ----------
+/* --------- AUTO-FIT TIME TEXT (prevents cropping/overlap) --------- */
+function fitTimeToBox() {
+  const box = document.getElementById("timeBox");
+  const t = document.getElementById("timeText");
+  if (!box || !t) return;
+
+  // Temporarily start large, then shrink until it fits.
+  let max = 420;
+  let min = 80;
+
+  // Keep some breathing room so it never touches the calendar.
+  const targetW = box.clientWidth * 0.98;
+  const targetH = box.clientHeight * 0.92;
+
+  // Binary search font size.
+  for (let i = 0; i < 16; i++) {
+    const mid = (min + max) / 2;
+    t.style.fontSize = `${mid}px`;
+
+    const rect = t.getBoundingClientRect();
+    const ok = (rect.width <= targetW) && (rect.height <= targetH);
+
+    if (ok) min = mid;
+    else max = mid;
+  }
+
+  t.style.fontSize = `${Math.floor(min)}px`;
+}
+
+/* --------- DIGITAL TIME + BLINKING COLON --------- */
 function updateDigitalTime() {
   const now = new Date();
   const p = partsInTZ(now, TIME_ZONE);
@@ -80,14 +108,21 @@ function updateDigitalTime() {
   if (hourEl) hourEl.textContent = hourText;
   if (minEl) minEl.textContent = pad2(minute);
 
-  // Blink: visible on even seconds, hidden on odd seconds
+  // Blink colon: visible on even seconds, hidden on odd seconds
   if (colonEl) colonEl.style.opacity = (second % 2 === 0) ? "1" : "0";
+
+  // Refit after text update (fast; runs 4x/sec)
+  fitTimeToBox();
 }
 
 updateDigitalTime();
 setInterval(updateDigitalTime, 250);
 
-// ---------- CALENDAR ----------
+// Refit on resize/orientation changes
+window.addEventListener("resize", fitTimeToBox);
+window.addEventListener("orientationchange", fitTimeToBox);
+
+/* --------- CALENDAR --------- */
 function renderCalendar() {
   const monthTitle = document.getElementById("monthTitle");
   const calGrid = document.getElementById("calGrid");
