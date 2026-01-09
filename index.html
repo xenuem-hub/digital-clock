@@ -14,29 +14,14 @@
 </head>
 <body>
   <main class="screen">
-    <!-- LEFT: DIGITAL CLOCK -->
+    <!-- LEFT: DIGITAL CLOCK (no ticks) -->
     <section class="left" aria-label="Digital clock">
-      <svg class="digitalSvg" id="digitalSvg" viewBox="0 0 260 180" role="img" aria-label="Digital time">
-        <!-- Rounded-rectangle tick ring -->
-        <path id="ringPath" class="ringPath"
-              d="M 55 20
-                 H 205
-                 A 20 20 0 0 1 225 40
-                 V 140
-                 A 20 20 0 0 1 205 160
-                 H 55
-                 A 20 20 0 0 1 35 140
-                 V 40
-                 A 20 20 0 0 1 55 20
-                 Z" />
-        <g id="ringTicks"></g>
-
-        <!-- Time text -->
-        <text id="timeText" class="timeText" x="130" y="102">00:00</text>
+      <svg class="digitalSvg" viewBox="0 0 260 180" role="img" aria-label="Digital time">
+        <text id="timeText" class="timeText" x="130" y="92">00:00</text>
       </svg>
     </section>
 
-    <!-- RIGHT: CALENDAR (same as before) -->
+    <!-- RIGHT: CALENDAR (unchanged) -->
     <section class="right" aria-label="Calendar">
       <div class="monthTitle" id="monthTitle"></div>
 
