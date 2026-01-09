@@ -1,15 +1,26 @@
 // Force US Eastern time
 const TIME_ZONE = "America/New_York";
 
-// Set true for 24-hour (13:29). Set false for 12-hour (1:29).
+// true for 24-hour (13:29). false for 12-hour (1:29).
 const USE_24H = true;
 
 const WEEKDAY_INDEX = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
 
 function partsInTZ(date, timeZone) {
   const opts = timeZone
-    ? { timeZone, year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", weekday: "short", hourCycle: "h23" }
-    : { year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", weekday: "short", hourCycle: "h23" };
+    ? {
+        timeZone,
+        year: "numeric", month: "numeric", day: "numeric",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        weekday: "short",
+        hourCycle: "h23"
+      }
+    : {
+        year: "numeric", month: "numeric", day: "numeric",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        weekday: "short",
+        hourCycle: "h23"
+      };
 
   const dtf = new Intl.DateTimeFormat("en-US", opts);
   const p = dtf.formatToParts(date);
@@ -26,6 +37,7 @@ function partsInTZ(date, timeZone) {
   };
 }
 
+// Find a Date instant whose formatted TZ date equals Y-M-D (weekday alignment)
 function findInstantForTZDate(year, month1to12, day, timeZone) {
   let dt = new Date(Date.UTC(year, month1to12 - 1, day, 12, 0, 0));
   const targetKey = year * 10000 + month1to12 * 100 + day;
@@ -56,9 +68,6 @@ function updateDigitalTime() {
   if (!USE_24H) {
     const h = hour % 12;
     hour = (h === 0) ? 12 : h;
-    // For 12-hour mode, many people prefer no leading zero:
-    // comment out the next line if you want "1:29" instead of "01:29"
-    // (handled below)
   }
 
   const hourText = USE_24H ? pad2(hour) : String(hour);
@@ -71,7 +80,7 @@ function updateDigitalTime() {
 updateDigitalTime();
 setInterval(updateDigitalTime, 250);
 
-// ---------- CALENDAR (unchanged) ----------
+// ---------- CALENDAR ----------
 function renderCalendar() {
   const monthTitle = document.getElementById("monthTitle");
   const calGrid = document.getElementById("calGrid");
