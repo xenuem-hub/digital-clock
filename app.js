@@ -74,4 +74,96 @@ function fitTimeToBox() {
     t.style.fontSize = `${mid}px`;
 
     const rect = t.getBoundingClientRect();
-    const ok = (rect.width <= targetW) && (rect.hei
+    const ok = (rect.width <= targetW) && (rect.height <= targetH);
+
+    if (ok) min = mid;
+    else max = mid;
+  }
+
+  t.style.fontSize = `${Math.floor(min)}px`;
+}
+
+/* --------- DIGITAL TIME (colon blink is CSS now) --------- */
+function updateDigitalTime() {
+  const now = new Date();
+  const p = partsInTZ(now, TIME_ZONE);
+
+  let hour = p.hour;
+  const minute = p.minute;
+
+  if (!USE_24H) {
+    const h = hour % 12;
+    hour = (h === 0) ? 12 : h;
+  }
+
+  const hourText = USE_24H ? pad2(hour) : String(hour);
+
+  const hourEl = document.getElementById("hourText");
+  const minEl = document.getElementById("minuteText");
+
+  if (hourEl) hourEl.textContent = hourText;
+  if (minEl) minEl.textContent = pad2(minute);
+
+  fitTimeToBox();
+}
+
+updateDigitalTime();
+setInterval(updateDigitalTime, 250);
+
+window.addEventListener("resize", fitTimeToBox);
+window.addEventListener("orientationchange", fitTimeToBox);
+
+/* --------- CALENDAR --------- */
+function renderCalendar() {
+  const monthTitle = document.getElementById("monthTitle");
+  const calGrid = document.getElementById("calGrid");
+  if (!monthTitle || !calGrid) return;
+
+  const now = new Date();
+  const today = partsInTZ(now, TIME_ZONE);
+
+  const year = today.year;
+  const month1to12 = today.month;
+  const monthIndex = month1to12 - 1;
+
+  const monthName = new Intl.DateTimeFormat("en-US", {
+    timeZone: TIME_ZONE || undefined,
+    month: "long"
+  }).format(now);
+
+  monthTitle.textContent = monthName.toUpperCase();
+
+  const daysInMonth = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
+
+  const firstInstant = TIME_ZONE
+    ? findInstantForTZDate(year, month1to12, 1, TIME_ZONE)
+    : new Date(year, monthIndex, 1);
+
+  const firstWk = new Intl.DateTimeFormat("en-US", {
+    timeZone: TIME_ZONE || undefined,
+    weekday: "short"
+  }).format(firstInstant);
+
+  const startDow = WEEKDAY_INDEX[firstWk] ?? 0;
+
+  calGrid.innerHTML = "";
+
+  for (let i = 0; i < 42; i++) {
+    const dayNum = i - startDow + 1;
+
+    const cell = document.createElement("div");
+    cell.className = "dayCell";
+
+    if (dayNum < 1 || dayNum > daysInMonth) {
+      cell.classList.add("blank");
+      cell.textContent = "";
+    } else {
+      cell.textContent = String(dayNum);
+      if (dayNum === today.day) cell.classList.add("today");
+    }
+
+    calGrid.appendChild(cell);
+  }
+}
+
+renderCalendar();
