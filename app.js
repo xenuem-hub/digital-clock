@@ -37,6 +37,7 @@ function partsInTZ(date, timeZone) {
   };
 }
 
+// Find a Date instant whose formatted TZ date equals Y-M-D (weekday alignment)
 function findInstantForTZDate(year, month1to12, day, timeZone) {
   let dt = new Date(Date.UTC(year, month1to12 - 1, day, 12, 0, 0));
   const targetKey = year * 10000 + month1to12 * 100 + day;
@@ -62,117 +63,15 @@ function fitTimeToBox() {
   const t = document.getElementById("timeText");
   if (!box || !t) return;
 
-  // Temporarily start large, then shrink until it fits.
-  let max = 420;
+  let max = 460;
   let min = 80;
 
-  // Keep some breathing room so it never touches the calendar.
   const targetW = box.clientWidth * 0.98;
   const targetH = box.clientHeight * 0.92;
 
-  // Binary search font size.
   for (let i = 0; i < 16; i++) {
     const mid = (min + max) / 2;
     t.style.fontSize = `${mid}px`;
 
     const rect = t.getBoundingClientRect();
-    const ok = (rect.width <= targetW) && (rect.height <= targetH);
-
-    if (ok) min = mid;
-    else max = mid;
-  }
-
-  t.style.fontSize = `${Math.floor(min)}px`;
-}
-
-/* --------- DIGITAL TIME + BLINKING COLON --------- */
-function updateDigitalTime() {
-  const now = new Date();
-  const p = partsInTZ(now, TIME_ZONE);
-
-  let hour = p.hour;
-  const minute = p.minute;
-  const second = p.second;
-
-  if (!USE_24H) {
-    const h = hour % 12;
-    hour = (h === 0) ? 12 : h;
-  }
-
-  const hourText = USE_24H ? pad2(hour) : String(hour);
-
-  const hourEl = document.getElementById("hourText");
-  const minEl = document.getElementById("minuteText");
-  const colonEl = document.getElementById("colonText");
-
-  if (hourEl) hourEl.textContent = hourText;
-  if (minEl) minEl.textContent = pad2(minute);
-
-  // Blink colon: visible on even seconds, hidden on odd seconds
-  if (colonEl) colonEl.style.opacity = (second % 2 === 0) ? "1" : "0";
-
-  // Refit after text update (fast; runs 4x/sec)
-  fitTimeToBox();
-}
-
-updateDigitalTime();
-setInterval(updateDigitalTime, 250);
-
-// Refit on resize/orientation changes
-window.addEventListener("resize", fitTimeToBox);
-window.addEventListener("orientationchange", fitTimeToBox);
-
-/* --------- CALENDAR --------- */
-function renderCalendar() {
-  const monthTitle = document.getElementById("monthTitle");
-  const calGrid = document.getElementById("calGrid");
-  if (!monthTitle || !calGrid) return;
-
-  const now = new Date();
-  const today = partsInTZ(now, TIME_ZONE);
-
-  const year = today.year;
-  const month1to12 = today.month;
-  const monthIndex = month1to12 - 1;
-
-  const monthName = new Intl.DateTimeFormat("en-US", {
-    timeZone: TIME_ZONE || undefined,
-    month: "long"
-  }).format(now);
-
-  monthTitle.textContent = monthName.toUpperCase();
-
-  const daysInMonth = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
-
-  const firstInstant = TIME_ZONE
-    ? findInstantForTZDate(year, month1to12, 1, TIME_ZONE)
-    : new Date(year, monthIndex, 1);
-
-  const firstWk = new Intl.DateTimeFormat("en-US", {
-    timeZone: TIME_ZONE || undefined,
-    weekday: "short"
-  }).format(firstInstant);
-
-  const startDow = WEEKDAY_INDEX[firstWk] ?? 0;
-
-  calGrid.innerHTML = "";
-
-  for (let i = 0; i < 42; i++) {
-    const dayNum = i - startDow + 1;
-
-    const cell = document.createElement("div");
-    cell.className = "dayCell";
-
-    if (dayNum < 1 || dayNum > daysInMonth) {
-      cell.classList.add("blank");
-      cell.textContent = "";
-    } else {
-      cell.textContent = String(dayNum);
-      if (dayNum === today.day) cell.classList.add("today");
-    }
-
-    calGrid.appendChild(cell);
-  }
-}
-
-renderCalendar();
+    const ok = (rect.width <= targetW) && (rect.hei
