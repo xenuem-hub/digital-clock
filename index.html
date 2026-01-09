@@ -14,15 +14,13 @@
 </head>
 <body>
   <main class="screen">
-    <!-- LEFT: DIGITAL CLOCK -->
+    <!-- LEFT: DIGITAL CLOCK (auto-fit; no cropping; no overlap) -->
     <section class="left" aria-label="Digital clock">
-      <svg class="digitalSvg" viewBox="0 0 260 180" role="img" aria-label="Digital time">
-        <text class="timeText" x="130" y="92">
-          <tspan id="hourText">00</tspan>
-          <tspan id="colonText">:</tspan>
-          <tspan id="minuteText">00</tspan>
-        </text>
-      </svg>
+      <div class="timeBox" id="timeBox" aria-label="Time">
+        <span class="timeText" id="timeText">
+          <span id="hourText">00</span><span id="colonText">:</span><span id="minuteText">00</span>
+        </span>
+      </div>
     </section>
 
     <!-- RIGHT: CALENDAR -->
