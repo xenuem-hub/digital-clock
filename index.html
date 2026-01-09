@@ -14,10 +14,14 @@
 </head>
 <body>
   <main class="screen">
-    <!-- LEFT: DIGITAL CLOCK (no ticks) -->
+    <!-- LEFT: DIGITAL CLOCK -->
     <section class="left" aria-label="Digital clock">
       <svg class="digitalSvg" viewBox="0 0 260 180" role="img" aria-label="Digital time">
-        <text id="timeText" class="timeText" x="130" y="92">00:00</text>
+        <text class="timeText" x="130" y="92">
+          <tspan id="hourText">00</tspan>
+          <tspan id="colonText">:</tspan>
+          <tspan id="minuteText">00</tspan>
+        </text>
       </svg>
     </section>
 
