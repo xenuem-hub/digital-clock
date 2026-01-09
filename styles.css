@@ -28,36 +28,59 @@ body{
   padding: clamp(14px, 2.5vw, 36px);
 }
 
-/* LEFT: make sure clock never intrudes into calendar */
+/* LEFT: clock never intrudes into calendar */
 .left{
   flex: 1.25;
   min-width: 0;
   display:flex;
   align-items:center;
   justify-content:flex-start;
-  padding-left: clamp(8px, 2vw, 28px);   /* nudges clock left */
-  overflow: hidden;                      /* prevents overlap bleed */
+  padding-left: clamp(8px, 2vw, 28px);
+  overflow: hidden;
 }
 
-/* A fixed “safe” box for the time; JS will fit font to this box */
+/* Safe box for the time; JS will fit font to this box */
 .timeBox{
   width: 100%;
-  max-width: 60vw;                       /* hard cap to protect calendar */
-  height: min(70vh, 420px);              /* keeps vertical proportions stable */
+  max-width: 60vw;
+  height: min(70vh, 420px);
   display:flex;
   align-items:center;
   justify-content:flex-start;
 }
 
-/* The time itself (10% thinner than before) */
+/* Time row: use flex so colon aligns vertically with digits */
 .timeText{
-  display:inline-block;
+  display:inline-flex;               /* IMPORTANT */
+  align-items:center;                /* IMPORTANT */
+  gap: 0;                            /* keep tight */
   color: rgba(235, 240, 255, 0.97);
-  font-weight: 600;                      /* thinner and well-supported */
+  font-weight: 600;                  /* thinner and well-supported */
   letter-spacing: 1px;
   line-height: 1;
   white-space: nowrap;
-  font-size: 320px;                      /* starting point; JS will auto-fit */
+  font-size: 320px;                  /* starting point; JS auto-fits */
+}
+
+/* Digits */
+.timePart{
+  display:inline-block;
+  line-height: 1;
+}
+
+/* Colon: lift slightly and blink */
+.timeColon{
+  display:inline-block;
+  line-height: 1;
+  transform: translateY(-0.08em);    /* lift colon to center */
+  animation: colonBlink 1s steps(1, end) infinite;
+  will-change: opacity;
+}
+
+/* Blink animation */
+@keyframes colonBlink{
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 /* RIGHT: calendar area */
